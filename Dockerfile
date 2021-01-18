@@ -13,3 +13,5 @@ FROM gcr.io/distroless/cc
 COPY --from=builder /app/target/release/pigeon /
 
 CMD ["./pigeon"]
+
+EXPOSE 8080
