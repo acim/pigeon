@@ -1,5 +1,6 @@
+use serde_json::value;
 use std::env;
-use tide::Request;
+use tide::prelude::*;
 
 mod mailer;
 
@@ -25,8 +26,11 @@ pub struct State {
     mailer: mailer::Mailer,
 }
 
-async fn send_mail(mut req: Request<State>) -> tide::Result {
+async fn send_mail(mut req: tide::Request<State>) -> tide::Result<value::Value> {
     let m: mailer::Message = req.body_json().await?;
     req.state().mailer.send_mail(&m).await?;
-    Ok(format!("{} {} {} {}", m.from, m.to, m.subject, m.body).into())
+    Ok(json!({
+        "code": 200,
+        "success": true
+    }))
 }
