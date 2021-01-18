@@ -40,5 +40,5 @@ jobs:
 
       - name: Lint
         run: |
-          helm lint chart/*
+          helm lint chart
           kube-linter lint chart
