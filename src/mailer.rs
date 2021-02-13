@@ -11,6 +11,10 @@ use std::u32;
 pub struct Message {
     pub from: String,
     pub to: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub cc: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub bcc: Option<String>,
     pub subject: String,
     pub body: String,
 }
@@ -50,8 +54,7 @@ impl Mailer {
             vec![EmailAddress::new(m.to.clone())?],
         )?;
 
-        let email =
-            SendableEmail::new(envelope, "id".to_string(), message.to_string().into_bytes());
+        let email = SendableEmail::new(envelope, "id".to_string(), message.into_bytes());
 
         let mut smtp = SmtpClient::new("smtp.ectobit.com").await?;
 
